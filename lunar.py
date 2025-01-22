@@ -4,15 +4,12 @@ from  manim import *
 
 class planetsv3(ThreeDScene):
     def construct(self):
-        # Cam zoom (zoom=.6, phi=0*DEGREES, theta=-90*DEGREES)
+        # Cam zoom
         self.set_camera_orientation(zoom=.6, phi=0*DEGREES, theta=-90*DEGREES)
 
         # Axes and labels
         ext = 15
         axes = ThreeDAxes(x_length=ext, y_length=ext, x_range=(-ext,ext,1), y_range=(-ext,ext,1), tips=False, axis_config={"color": GRAY, "stroke_opacity": 0.1})
-        # x_label = axes.get_x_axis_label("x").shift(RIGHT*1.5)
-        # y_label = axes.get_y_axis_label("y", rotation=PI*2).shift(UP*1)
-        # z_label = axes.get_z_axis_label("z")
         xy_plane = Surface(
             lambda u, v: axes.c2p(u, v, 0),
             u_range=[-ext,ext],  # Range for u (x-axis)
@@ -86,9 +83,9 @@ class planetsv3(ThreeDScene):
         penumbra1.set_color(ORANGE).set_opacity(0.225).set_stroke(opacity=0)
 
         # Umbra2, Penumbra2, Lines2
-        umbra2 = umbra1.rotate(90*DEGREES, OUT, about_point=ORIGIN)
-        penumbra2 = penumbra1.rotate(90*DEGREES, OUT, about_point=ORIGIN)
-        lines2 = lines1.rotate(90*DEGREES, OUT, about_point=ORIGIN)
+        umbra2 = umbra1.copy().rotate(90*DEGREES, OUT, about_point=ORIGIN)
+        penumbra2 = penumbra1.copy().rotate(90*DEGREES, OUT, about_point=ORIGIN)
+        lines2 = lines1.copy().rotate(90*DEGREES, OUT, about_point=ORIGIN)
         # UPL2 = VGroup(umbra1, penumbra1, lines1).rotate(90*DEGREES, OUT, about_point=ORIGIN)
 
 
@@ -111,10 +108,9 @@ class planetsv3(ThreeDScene):
         self.wait(3)
 
         # Moon and Earth animations
-        for _ in range(1):
-            self.play(MoveAlongPath(earth, earth_path),
-                      MoveAlongPath(moon, moon_path),
-                      run_time=10, rate_func=linear)
+        self.play(MoveAlongPath(earth, earth_path),
+                  MoveAlongPath(moon, moon_path),
+                  run_time=10, rate_func=linear)
         self.wait(3)
 
         # Fade Out moons orbit
@@ -134,8 +130,7 @@ class planetsv3(ThreeDScene):
 
         # Reset scene
         self.play(moon_path.animate.set_stroke(opacity=1).set_fill(opacity=0.2),
-                  FadeOut(umbra1, penumbra1), run_time=0.75)
-
+                  FadeOut(umbra1, penumbra1, lines), run_time=0.75)
 
 
         # Moon and earth animation for quarter 1
@@ -164,4 +159,4 @@ class planetsv3(ThreeDScene):
 
         # Reset scene
         self.play(moon_path.animate.set_stroke(opacity=1).set_fill(opacity=0.2),
-                  FadeOut(umbra1, penumbra1), run_time=0.75)
+                  FadeOut(umbra2, penumbra2, lines2), run_time=0.75)
